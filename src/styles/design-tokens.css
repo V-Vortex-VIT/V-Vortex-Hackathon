@@ -1,0 +1,225 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Share+Tech+Mono&display=swap');
+
+/* ═══════════════════════════════════════════════════════════
+   V-VORTEX DESIGN TOKENS
+   Custom Brand Identity - Electric Violet + Cyber Cyan Theme
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  /* ─────────────── PRIMARY COLORS ─────────────── */
+  --vortex-violet: #8B5CF6;
+  --vortex-violet-light: #A78BFA;
+  --vortex-violet-dark: #7C3AED;
+  --vortex-violet-glow: rgba(139, 92, 246, 0.6);
+
+  --vortex-cyan: #06B6D4;
+  --vortex-cyan-light: #22D3EE;
+  --vortex-cyan-dark: #0891B2;
+  --vortex-cyan-glow: rgba(6, 182, 212, 0.6);
+
+  --vortex-pink: #EC4899;
+  --vortex-pink-light: #F472B6;
+  --vortex-pink-dark: #DB2777;
+  --vortex-pink-glow: rgba(236, 72, 153, 0.6);
+
+  /* ─────────────── ACCENT COLORS ─────────────── */
+  --vortex-gold: #F59E0B;
+  --vortex-emerald: #10B981;
+  --vortex-red: #EF4444;
+
+  /* ─────────────── BACKGROUND COLORS ─────────────── */
+  --bg-deep-space: #0A0A0F;
+  --bg-void: #050508;
+  --bg-nebula: #0F0A1F;
+  --bg-card: rgba(15, 10, 31, 0.8);
+  --bg-glass: rgba(139, 92, 246, 0.08);
+  --bg-glass-hover: rgba(139, 92, 246, 0.15);
+
+  /* ─────────────── TEXT COLORS ─────────────── */
+  --text-primary: #F8FAFC;
+  --text-secondary: #CBD5E1;
+  --text-muted: #64748B;
+  --text-accent: var(--vortex-cyan-light);
+
+  /* ─────────────── GRADIENTS ─────────────── */
+  --gradient-hero: linear-gradient(135deg, var(--vortex-violet) 0%, var(--vortex-cyan) 50%, var(--vortex-pink) 100%);
+  --gradient-card: linear-gradient(180deg, rgba(139, 92, 246, 0.1) 0%, rgba(6, 182, 212, 0.05) 100%);
+  --gradient-button: linear-gradient(135deg, var(--vortex-violet) 0%, var(--vortex-pink) 100%);
+  --gradient-text: linear-gradient(90deg, var(--vortex-cyan-light), var(--vortex-violet-light), var(--vortex-pink-light));
+  --gradient-border: linear-gradient(135deg, var(--vortex-violet), var(--vortex-cyan), var(--vortex-pink));
+  --gradient-glow: radial-gradient(circle, var(--vortex-violet-glow) 0%, transparent 70%);
+
+  /* ─────────────── GLASSMORPHISM ─────────────── */
+  --glass-bg: rgba(15, 10, 31, 0.6);
+  --glass-border: rgba(139, 92, 246, 0.2);
+  --glass-blur: blur(20px);
+
+  /* ─────────────── SHADOWS ─────────────── */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.5);
+  --shadow-glow-violet: 0 0 30px var(--vortex-violet-glow);
+  --shadow-glow-cyan: 0 0 30px var(--vortex-cyan-glow);
+  --shadow-glow-pink: 0 0 30px var(--vortex-pink-glow);
+
+  /* ─────────────── BORDERS ─────────────── */
+  --border-subtle: 1px solid rgba(139, 92, 246, 0.15);
+  --border-accent: 1px solid rgba(139, 92, 246, 0.4);
+  --border-glow: 2px solid var(--vortex-violet);
+  --border-radius-sm: 8px;
+  --border-radius-md: 12px;
+  --border-radius-lg: 20px;
+  --border-radius-xl: 32px;
+
+  /* ─────────────── SPACING ─────────────── */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 40px;
+  --space-2xl: 64px;
+  --space-3xl: 100px;
+
+  /* ─────────────── TYPOGRAPHY ─────────────── */
+  --font-display: 'Orbitron', 'Share Tech Mono', monospace;
+  --font-body: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'Share Tech Mono', 'Fira Code', monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 2rem;
+  --text-4xl: 2.5rem;
+  --text-5xl: 3.5rem;
+  --text-6xl: 4.5rem;
+
+  /* ─────────────── TRANSITIONS ─────────────── */
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --transition-slow: 400ms ease;
+  --transition-bounce: 400ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+  /* ─────────────── Z-INDEX ─────────────── */
+  --z-background: -1;
+  --z-base: 1;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-modal: 500;
+  --z-cursor: 9999;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   GLOBAL RESET & BASE STYLES
+   ═══════════════════════════════════════════════════════════ */
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-void);
+  color: var(--text-primary);
+  line-height: 1.6;
+  overflow-x: hidden;
+  cursor: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Hide default cursor on interactive elements */
+a,
+button,
+[role="button"],
+input,
+select,
+textarea {
+  cursor: none;
+}
+
+::selection {
+  background: var(--vortex-violet);
+  color: var(--text-primary);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   UTILITY CLASSES
+   ═══════════════════════════════════════════════════════════ */
+
+.gradient-text {
+  background: var(--gradient-text);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 3s linear infinite;
+}
+
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: var(--border-subtle);
+  border-radius: var(--border-radius-lg);
+}
+
+.glow-violet {
+  box-shadow: var(--shadow-glow-violet);
+}
+
+.glow-cyan {
+  box-shadow: var(--shadow-glow-cyan);
+}
+
+.glow-pink {
+  box-shadow: var(--shadow-glow-pink);
+}
+
+/* Animated gradient border */
+.gradient-border {
+  position: relative;
+  background: var(--bg-card);
+  border-radius: var(--border-radius-lg);
+}
+
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: var(--gradient-border);
+  border-radius: inherit;
+  z-index: -1;
+  animation: rotate-gradient 4s linear infinite;
+}
+
+@keyframes rotate-gradient {
+  0% {
+    filter: hue-rotate(0deg);
+  }
+
+  100% {
+    filter: hue-rotate(360deg);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 0% center;
+  }
+
+  100% {
+    background-position: 200% center;
+  }
+}

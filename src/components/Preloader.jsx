@@ -27,11 +27,11 @@ export default function Preloader({ onFinished }) {
         e.stopPropagation();
         return false;
       };
-      
+
       window.addEventListener('keydown', blockKeyboard, true);
       window.addEventListener('keyup', blockKeyboard, true);
       window.addEventListener('keypress', blockKeyboard, true);
-      
+
       return () => {
         window.removeEventListener('keydown', blockKeyboard, true);
         window.removeEventListener('keyup', blockKeyboard, true);
@@ -185,9 +185,9 @@ export default function Preloader({ onFinished }) {
           preload="auto"
           onEnded={handleEnd}
           onLoadedData={(e) => {
-            // smooth opacity fade-in once video data is ready
+            // smooth opacity fade-in once video data is ready via CSS class
             setTimeout(() => {
-              if (e && e.target) e.target.style.opacity = 1;
+              if (e && e.target) e.target.classList.add('video-loaded');
             }, 100);
           }}
           // Disable all video controls
@@ -200,7 +200,7 @@ export default function Preloader({ onFinished }) {
           onPause={(e) => {
             // If user somehow pauses, immediately resume
             if (videoRef.current && !finishedRef.current) {
-              videoRef.current.play().catch(() => {});
+              videoRef.current.play().catch(() => { });
             }
           }}
           src="/secondpart_fixed.mp4"

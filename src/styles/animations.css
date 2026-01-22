@@ -1,0 +1,505 @@
+/* ═══════════════════════════════════════════════════════════
+   V-VORTEX ANIMATION LIBRARY
+   Stunning micro-interactions and effects
+   ═══════════════════════════════════════════════════════════ */
+
+/* ─────────────── ANIMATED SECTION BASE ─────────────── */
+/* GPU-accelerated base class for scroll-triggered animations */
+.animated-section {
+    opacity: 0;
+    will-change: transform, opacity;
+    animation-fill-mode: forwards;
+    animation-delay: var(--anim-delay, 0ms);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+/* Initial states with GPU-optimized transforms */
+.animated-section.anim-reveal-up {
+    transform: translate3d(0, 40px, 0);
+}
+
+.animated-section.anim-fade-in {
+    transform: translate3d(0, 0, 0);
+}
+
+.animated-section.anim-scale-in {
+    transform: scale3d(0.9, 0.9, 1);
+}
+
+.animated-section.anim-slide-left {
+    transform: translate3d(-60px, 0, 0);
+}
+
+.animated-section.anim-slide-right {
+    transform: translate3d(60px, 0, 0);
+}
+
+/* Visible states - trigger animations */
+.animated-section.is-visible.anim-reveal-up {
+    animation: reveal-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: var(--anim-delay, 0ms);
+}
+
+.animated-section.is-visible.anim-fade-in {
+    animation: fade-in 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    animation-delay: var(--anim-delay, 0ms);
+}
+
+.animated-section.is-visible.anim-scale-in {
+    animation: scale-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: var(--anim-delay, 0ms);
+}
+
+.animated-section.is-visible.anim-slide-left {
+    animation: slide-in-left 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: var(--anim-delay, 0ms);
+}
+
+.animated-section.is-visible.anim-slide-right {
+    animation: slide-in-right 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: var(--anim-delay, 0ms);
+}
+
+/* ─────────────── VORTEX SPIN ─────────────── */
+@keyframes vortex-spin {
+    0% {
+        transform: rotate(0deg) scale(1);
+    }
+
+    50% {
+        transform: rotate(180deg) scale(1.05);
+    }
+
+    100% {
+        transform: rotate(360deg) scale(1);
+    }
+}
+
+.animate-vortex {
+    animation: vortex-spin 8s linear infinite;
+}
+
+/* ─────────────── FLOAT ─────────────── */
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    25% {
+        transform: translateY(-10px) rotate(1deg);
+    }
+
+    75% {
+        transform: translateY(10px) rotate(-1deg);
+    }
+}
+
+.animate-float {
+    animation: float 6s ease-in-out infinite;
+}
+
+.animate-float-slow {
+    animation: float 10s ease-in-out infinite;
+}
+
+.animate-float-fast {
+    animation: float 3s ease-in-out infinite;
+}
+
+/* ─────────────── GLOW PULSE ─────────────── */
+@keyframes glow-pulse {
+
+    0%,
+    100% {
+        box-shadow: 0 0 20px var(--vortex-violet-glow),
+            0 0 40px var(--vortex-violet-glow);
+        opacity: 1;
+    }
+
+    50% {
+        box-shadow: 0 0 40px var(--vortex-cyan-glow),
+            0 0 80px var(--vortex-cyan-glow);
+        opacity: 0.8;
+    }
+}
+
+.animate-glow-pulse {
+    animation: glow-pulse 3s ease-in-out infinite;
+}
+
+/* ─────────────── TEXT GLOW ─────────────── */
+@keyframes text-glow {
+
+    0%,
+    100% {
+        text-shadow: 0 0 10px var(--vortex-cyan-glow),
+            0 0 20px var(--vortex-cyan-glow),
+            0 0 30px var(--vortex-cyan-glow);
+    }
+
+    50% {
+        text-shadow: 0 0 20px var(--vortex-violet-glow),
+            0 0 40px var(--vortex-violet-glow),
+            0 0 60px var(--vortex-violet-glow);
+    }
+}
+
+.animate-text-glow {
+    animation: text-glow 2s ease-in-out infinite;
+}
+
+/* ─────────────── REVEAL UP ─────────────── */
+@keyframes reveal-up {
+    0% {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-reveal-up {
+    animation: reveal-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.reveal-delay-1 {
+    animation-delay: 0.1s;
+}
+
+.reveal-delay-2 {
+    animation-delay: 0.2s;
+}
+
+.reveal-delay-3 {
+    animation-delay: 0.3s;
+}
+
+.reveal-delay-4 {
+    animation-delay: 0.4s;
+}
+
+.reveal-delay-5 {
+    animation-delay: 0.5s;
+}
+
+/* ─────────────── FADE IN ─────────────── */
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.animate-fade-in {
+    animation: fade-in 0.6s ease forwards;
+}
+
+/* ─────────────── SCALE IN ─────────────── */
+@keyframes scale-in {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.animate-scale-in {
+    animation: scale-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ─────────────── SLIDE IN ─────────────── */
+@keyframes slide-in-left {
+    0% {
+        opacity: 0;
+        transform: translateX(-60px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slide-in-right {
+    0% {
+        opacity: 0;
+        transform: translateX(60px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.animate-slide-left {
+    animation: slide-in-left 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-right {
+    animation: slide-in-right 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ─────────────── PARTICLE FLOAT ─────────────── */
+@keyframes particle-float {
+
+    0%,
+    100% {
+        transform: translate(0, 0) rotate(0deg);
+        opacity: 0.6;
+    }
+
+    25% {
+        transform: translate(20px, -30px) rotate(90deg);
+        opacity: 1;
+    }
+
+    50% {
+        transform: translate(-10px, -60px) rotate(180deg);
+        opacity: 0.8;
+    }
+
+    75% {
+        transform: translate(-30px, -30px) rotate(270deg);
+        opacity: 0.6;
+    }
+}
+
+.animate-particle {
+    animation: particle-float 15s ease-in-out infinite;
+}
+
+/* ─────────────── MORPH SHAPES ─────────────── */
+@keyframes morph {
+
+    0%,
+    100% {
+        border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    }
+
+    25% {
+        border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+    }
+
+    50% {
+        border-radius: 50% 60% 30% 60% / 30% 60% 70% 40%;
+    }
+
+    75% {
+        border-radius: 60% 40% 60% 30% / 70% 30% 50% 60%;
+    }
+}
+
+.animate-morph {
+    animation: morph 8s ease-in-out infinite;
+}
+
+/* ─────────────── GRADIENT MOVE ─────────────── */
+@keyframes gradient-move {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.animate-gradient {
+    background-size: 200% 200%;
+    animation: gradient-move 5s ease infinite;
+}
+
+/* ─────────────── MAGNETIC HOVER ─────────────── */
+@keyframes magnetic-pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.02);
+    }
+}
+
+.magnetic-hover {
+    transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.magnetic-hover:hover {
+    animation: magnetic-pulse 0.6s ease-in-out;
+}
+
+/* ─────────────── TYPEWRITER ─────────────── */
+@keyframes typewriter {
+    from {
+        width: 0;
+    }
+
+    to {
+        width: 100%;
+    }
+}
+
+@keyframes blink-caret {
+
+    0%,
+    50% {
+        border-color: var(--vortex-cyan);
+    }
+
+    51%,
+    100% {
+        border-color: transparent;
+    }
+}
+
+.animate-typewriter {
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 3px solid var(--vortex-cyan);
+    animation: typewriter 3s steps(40) forwards,
+        blink-caret 0.75s step-end infinite;
+}
+
+/* ─────────────── SCANLINES ─────────────── */
+@keyframes scanline {
+    0% {
+        transform: translateY(-100%);
+    }
+
+    100% {
+        transform: translateY(100vh);
+    }
+}
+
+.scanline-effect::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg,
+            transparent,
+            var(--vortex-cyan-glow),
+            transparent);
+    animation: scanline 8s linear infinite;
+    pointer-events: none;
+    z-index: 9998;
+}
+
+/* ─────────────── RIPPLE EFFECT ─────────────── */
+@keyframes ripple {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+.ripple-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.ripple-container::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100px;
+    height: 100px;
+    background: var(--vortex-violet-glow);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+}
+
+.ripple-container:active::after {
+    animation: ripple 0.6s ease-out;
+}
+
+/* ─────────────── 3D TILT ─────────────── */
+.tilt-3d {
+    transform-style: preserve-3d;
+    transition: transform 0.3s ease;
+}
+
+.tilt-3d:hover {
+    transform: perspective(1000px) rotateX(5deg) rotateY(-5deg) scale(1.02);
+}
+
+/* ─────────────── NEON FLICKER ─────────────── */
+@keyframes neon-flicker {
+
+    0%,
+    19%,
+    21%,
+    23%,
+    25%,
+    54%,
+    56%,
+    100% {
+        text-shadow:
+            0 0 5px var(--vortex-cyan),
+            0 0 10px var(--vortex-cyan),
+            0 0 20px var(--vortex-cyan),
+            0 0 40px var(--vortex-violet),
+            0 0 80px var(--vortex-violet);
+    }
+
+    20%,
+    24%,
+    55% {
+        text-shadow: none;
+    }
+}
+
+.animate-neon-flicker {
+    animation: neon-flicker 2s infinite alternate;
+}
+
+/* ─────────────── SCROLL PROGRESS ─────────────── */
+@keyframes scroll-progress {
+    0% {
+        transform: scaleX(0);
+    }
+
+    100% {
+        transform: scaleX(1);
+    }
+}
+
+.scroll-progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--gradient-hero);
+    transform-origin: left;
+    z-index: 9999;
+}

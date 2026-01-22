@@ -1,10 +1,15 @@
-/* Remove browser margins */
-html, body {
+/* ═══════════════════════════════════════════════════════════
+   V-VORTEX PRELOADER STYLES
+   Updated to match new design system
+   ═══════════════════════════════════════════════════════════ */
+
+/* Remove browser margins - overflow handled by design-tokens.css */
+html,
+body {
   margin: 0;
   padding: 0;
   width: 100%;
   height: 100%;
-  overflow: hidden;
 }
 
 /* ===============================
@@ -17,41 +22,114 @@ html, body {
   width: 100vw;
   height: 100vh;
 
-  background: black;
+  background: linear-gradient(135deg, #0A0A0F 0%, #0F0A1F 50%, #050508 100%);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 
-  cursor: pointer;
+  cursor: none;
   z-index: 500;
-  transition: transform 0.4s ease;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+/* Animated gradient background */
+#enterScreen::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 30%, rgba(139, 92, 246, 0.2) 0%, transparent 50%),
+    radial-gradient(circle at 70% 70%, rgba(6, 182, 212, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(236, 72, 153, 0.1) 0%, transparent 60%);
+  animation: bgPulse 8s ease-in-out infinite;
+}
+
+@keyframes bgPulse {
+
+  0%,
+  100% {
+    opacity: 0.8;
+  }
+
+  50% {
+    opacity: 1;
+  }
 }
 
 #enterText {
-  font-size: 38px;
-  margin-bottom: 12px;
-  color: #00ff9d;
-  animation: pulse 1.6s infinite alternate ease;
-  text-shadow: 0 0 12px #00ff9d;
+  position: relative;
+  z-index: 1;
+  font-family: 'Orbitron', 'Share Tech Mono', monospace;
+  font-size: clamp(18px, 4vw, 38px);
+  font-weight: 600;
+  margin-bottom: 20px;
+  text-align: center;
+  padding: 0 20px;
+
+  /* Gradient text */
+  background: linear-gradient(90deg, #8B5CF6, #06B6D4, #EC4899);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+
+  animation: pulse 1.6s infinite alternate ease, textShimmer 3s linear infinite;
+  filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.5));
+}
+
+@keyframes textShimmer {
+  0% {
+    background-position: 0% center;
+  }
+
+  100% {
+    background-position: 200% center;
+  }
 }
 
 #arrow {
+  position: relative;
+  z-index: 1;
   font-size: 26px;
-  color: #00ff9d;
+  color: #8B5CF6;
   opacity: 0.85;
+  animation: bounce 1.5s ease-in-out infinite;
+}
+
+@keyframes bounce {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(8px);
+  }
 }
 
 /* Pulse animation */
 @keyframes pulse {
-  from { opacity: 0.4; transform: scale(0.97); }
-  to { opacity: 1; transform: scale(1.06); }
+  from {
+    opacity: 0.6;
+    transform: scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1.02);
+  }
 }
 
 @media (max-width: 600px) {
   #enterText {
-    font-size: 24px;
+    font-size: 20px;
+    line-height: 1.5;
   }
+
   #arrow {
     font-size: 20px;
   }
@@ -70,18 +148,22 @@ html, body {
   position: absolute;
   width: 100%;
   height: 100%;
-  background: repeating-linear-gradient(
-    transparent,
-    rgba(0,255,157,0.03) 2px
-  );
+  background: repeating-linear-gradient(transparent,
+      rgba(139, 92, 246, 0.02) 2px,
+      transparent 4px);
   mix-blend-mode: difference;
   animation: glitchMove 0.6s infinite linear alternate;
   pointer-events: none;
 }
 
 @keyframes glitchMove {
-  from { transform: translateY(0); }
-  to { transform: translateY(10px); }
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(10px);
+  }
 }
 
 /* ===============================
@@ -97,13 +179,17 @@ html, body {
   object-fit: cover;
 
   opacity: 0;
-  transition: opacity 1.2s ease-in-out;
+  transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 900;
-  
+
   /* Disable video controls completely */
   pointer-events: none;
   user-select: none;
   -webkit-user-select: none;
+}
+
+#introVideo.video-loaded {
+  opacity: 1;
 }
 
 /* Remove default video controls styling */
@@ -132,7 +218,7 @@ html, body {
 }
 
 /* ===============================
-   WHITE FLASH TRANSITION
+   GRADIENT FLASH TRANSITION
 ================================ */
 #flash {
   position: fixed;
@@ -140,11 +226,11 @@ html, body {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: white;
+  background: linear-gradient(135deg, #8B5CF6 0%, #06B6D4 50%, #EC4899 100%);
   opacity: 0;
   pointer-events: none;
   z-index: 2000;
-  transition: opacity 0.2s ease-out;
+  transition: opacity 0.3s ease-out;
 }
 
 .flashVisible {
@@ -162,13 +248,13 @@ html, body {
   width: 100vw;
   height: 100vh;
 
-  background: repeating-linear-gradient(
-    transparent 0,
-    rgba(0, 255, 100, 0.055) 2px
-  );
+  background: repeating-linear-gradient(0deg,
+      transparent 0,
+      rgba(139, 92, 246, 0.03) 2px,
+      transparent 4px);
 
   mix-blend-mode: overlay;
-  opacity: 0.08;
+  opacity: 0.1;
   z-index: 1500;
   pointer-events: none;
 }

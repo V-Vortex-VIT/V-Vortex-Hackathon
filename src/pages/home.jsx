@@ -1,605 +1,438 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import AnimatedSection from "../components/AnimatedSection";
+import ParticleBackground from "../components/ParticleBackground";
+import {
+  VortexIcon, AIIcon, ShieldIcon, HeartPulseIcon,
+  CoinIcon, ChipIcon, CalendarIcon, MapPinIcon,
+  TrophyIcon, SparkleIcon, LightningIcon, ArrowRightIcon
+} from "../components/icons/index.jsx";
 import "../styles/home.css";
 
 export default function Home({ setTransition }) {
   const router = useNavigate();
+  const heroRef = useRef(null);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   const goTo = (path) => {
-    console.log("nav.goTo ->", path);
-    try {
-      if (setTransition) setTransition(null);
-    } catch (e) {}
+    if (setTransition) setTransition(null);
     router(path);
     window.scrollTo(0, 0);
   };
 
-  // Problem statements stay blurred until manual removal of the blur feature
-
-  const rounds = {
-    r1: {
-      title: "ROUND 1: CONCEPTUALIZATION",
-      desc: "The Ideathon will be conducted by the V-Vortex team via a dedicated platform. The problem statements will be displayed on January 7, 2026; with the problem statements for IOT and Robotics to be revealed sooner (by a week sooner) for better preparation.",
-      blocks: {
-        Rules: [
-          "10–15 slides maximum",
-          "Clear problem & solution",
-          "Market & feasibility analysis",
-          "Timeline: 07th Jan 2026 - 08th Jan 2026",
-          "Mode: Online"
-        ],
-        Evaluation: [
-          "Innovation (30%)",
-          "Feasibility (25%)",
-          "Market Impact (25%)",
-          "Presentation (20%)",
-        ],
-      },
-    },
-    r2: {
-      title: "ROUND 2: CONSTRUCTION",
-      desc: "The hackathon will commence offline at VIT Chennai on January 9, 2025 from 9 AM onwards. Participants are requested to report to MG Auditorium before 8:30 AM in order to facilitate smooth registrations!!!",
-      blocks: {
-        Rules: ["No pre-written code", "Any tech stack allowed", "Mentors available"],
-        Evaluation: ["Working Prototype (35%)", "Code Quality (25%)", "UX/UI (20%)"],
-      },
-    },
-    r3: {
-      title: "ROUND 3: VALIDATION",
-      desc: "On January 10, 2026; the finalists will be selected for a exclusive investor pitch with the director of V-Nest and a team of industry domain experts.",
-      blocks: {
-        Pitch: ["10 min pitch + Q&A", "Selected teams pitch to Industry Entrepreneurs for feedback, mentorship & opportunities."],
-        Rewards: ["₹ 15,000 Winner","₹ 7,000 First Runner-Up","₹ 5,000 Second Runner-Up","₹ 3,000 Special Mentions","Participation certificate For every participant in the finale", "Internships"],
-      },
-    },
-  };
-
-  const domains = {
-    iot: {
-      title: "IOT & ROBOTICS",
-      icon: "🔌",
-      problems: [
-        {
-          name: "Sky-Glow Sentinel (Urban Light Pollution Mapping)",
-          desc: "Urban light pollution creates skyglow that obscures stars and disrupts natural biological cycles. The objective is to design a high-sensitivity Sky Quality Monitoring system capable of accurately measuring night-sky brightness in urban environments and mapping these measurements to quantify and visualize light pollution at ground level."
-        },
-        {
-          name: "Decentralized Communication in Infrastructure-Denied Environments",
-          desc: "Modern communication systems fail in environments without internet, cellular networks, Wi-Fi, or cloud access. The objective is to develop a decentralized, peer-to-peer hardware communication network that enables reliable data exchange and maintains network functionality without any centralized infrastructure."
-        },
-        {
-          name: "Smart Parking Occupancy Detection System",
-          desc: "In urban areas, drivers spend significant time searching for vacant parking spaces, leading to traffic congestion and fuel wastage. The objective is to design a low-cost IoT-based system that detects parking spot occupancy in real time and communicates availability information to users through a centralized interface."
-        }
-      ]
-    },
-    aiml: {
-      title: "AI/ML",
-      icon: "🤖",
-      problems: [
-        {
-          name: "AI-Generated Image Authenticity Detection",
-          desc: "Design a system that determines whether an image is AI-generated or real, remaining robust to compression, resizing, and post-processing, while providing confidence-aware and explainable authenticity assessments across diverse image sources."
-        },
-        {
-          name: "AI-Powered Mind Map Search Engine",
-          desc: "Design a search system that retrieves information for a user query and organizes results into an interactive mind map, automatically revealing key concepts, subtopics, and relationships to support exploratory learning and research."
-        },
-        {
-          name: "AI-Powered Mental Well-Being Risk Indicator (Non-Clinical)",
-          desc: "Design a non-clinical system that analyzes anonymized behavioral patterns over time to identify early mental well-being risk indicators, while preserving user privacy, avoiding medical diagnosis, and providing transparent, uncertainty-aware insights."
-        }
-      ]
-    },
-    fintech: {
-      title: "FINTECH",
-      icon: "💰",
-      problems: [
-        {
-          name: "Unified Payment Orchestration & Automated Settlements",
-          desc: "Design and prototype a unified payment orchestration platform that allows merchants to accept payments across multiple channels through a single interface, while automating post-payment workflows such as settlements, refunds, splits, and conditional payouts using configurable logic. The system should reliably initiate, track, settle, and reconcile transactions in an auditable and extensible manner."
-        },
-        {
-          name: "Privacy-Preserving Collaborative Fraud Intelligence Platform",
-          desc: "Design and prototype a real-time transaction monitoring and compliance intelligence platform that detects suspicious activity and assigns risk levels while enabling privacy-preserving collaboration across multiple independent entities. The platform must support shared fraud intelligence without exposing raw transaction data, provide explainable risk decisions, and ensure transparency, auditability, and data sovereignty."
-        },
-        {
-          name: "Adaptive Pricing in Real-Time Digital Marketplaces",
-          desc: "Design a real-time adaptive pricing system for digital marketplaces that continuously adjusts prices under uncertain and evolving demand conditions to maximize long-term business value while maintaining fairness, customer trust, and regulatory compliance. The system should balance short-term revenue with long-term retention, handle delayed feedback, and avoid extreme or erratic price fluctuations."
-        }
-      ]
-    }
-  };
-
-  const [activeRound, setActiveRound] = useState(null);
-  const [activeDomain, setActiveDomain] = useState(null);
-  const DRIVE_LINK = 'https://drive.google.com/drive/folders/1_8MIetG3u4Y-5st4FfFWtrbDbe6VEPFd?usp=sharing';
-
+  // Parallax effect for hero
   useEffect(() => {
-    function onKey(e) {
-      if (e.key === "Escape") {
-        closeModal();
-        closeDomainModal();
-      }
-    }
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    const handleMouseMove = (e) => {
+      setMousePosition({
+        x: (e.clientX / window.innerWidth - 0.5) * 20,
+        y: (e.clientY / window.innerHeight - 0.5) * 20
+      });
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  function openModal(key) {
-    setActiveRound(rounds[key]);
-    document.body.style.overflow = "hidden";
-  }
+  const rounds = [
+    {
+      number: "01",
+      title: "IDEATION",
+      subtitle: "CONCEPTUALIZATION",
+      date: "07th - 08th Jan",
+      mode: "Online",
+      desc: "Teams submitted their innovative ideas through our dedicated platform. Problem statements were revealed on January 7, 2026.",
+      highlights: ["10-15 slides max", "Online submission", "48-hour window"]
+    },
+    {
+      number: "02",
+      title: "HACKATHON",
+      subtitle: "CONSTRUCTION",
+      date: "09th - 10th Jan",
+      mode: "Offline",
+      desc: "24-hour intensive hackathon at VIT Chennai. Teams built working prototypes with mentor guidance.",
+      highlights: ["No pre-written code", "Any tech stack", "Mentors available"]
+    },
+    {
+      number: "03",
+      title: "PITCH",
+      subtitle: "VALIDATION",
+      date: "10th Jan",
+      mode: "Live",
+      desc: "Teams presented to industry experts and investors. Top teams received mentorship and opportunities.",
+      highlights: ["10 min pitch", "Q&A session", "Expert feedback"]
+    }
+  ];
 
-  function closeModal(e) {
-    if (e && e.stopPropagation) e.stopPropagation();
-    setActiveRound(null);
-    document.body.style.overflow = "";
-  }
+  const domains = [
+    { name: "AI/ML", icon: AIIcon, color: "#8B5CF6", desc: "Machine Learning & Intelligence" },
+    { name: "Cybersecurity", icon: ShieldIcon, color: "#06B6D4", desc: "Digital Defense & Privacy" },
+    { name: "Healthcare", icon: HeartPulseIcon, color: "#EC4899", desc: "Medical Innovation" },
+    { name: "Fintech", icon: CoinIcon, color: "#F59E0B", desc: "Financial Technology" },
+    { name: "IoT & Robotics", icon: ChipIcon, color: "#10B981", desc: "Connected Systems" }
+  ];
 
-  function openDomainModal(key) {
-    setActiveDomain(domains[key]);
-    document.body.style.overflow = "hidden";
-  }
+  const prizes = [
+    { place: "1st", amount: "₹15,000", label: "Winner" },
+    { place: "2nd", amount: "₹7,000", label: "Runner Up" },
+    { place: "3rd", amount: "₹5,000", label: "2nd Runner Up" },
+    { place: "★", amount: "₹3,000", label: "Special Mentions" }
+  ];
 
-  function closeDomainModal(e) {
-    if (e && e.stopPropagation) e.stopPropagation();
-    setActiveDomain(null);
-    document.body.style.overflow = "";
-  }
-
-  const overlayStyle = {
-    position: "fixed",
-    inset: 0,
-    display: activeRound ? "flex" : "none",
-    alignItems: "center",
-    justifyContent: "center",
-    background: "linear-gradient(0deg, rgba(0,0,0,0.7), rgba(0,0,0,0.6))",
-    zIndex: 1000,
-    padding: "40px 20px",
-    overflowY: "auto",
-  };
-
-  const domainOverlayStyle = {
-    position: "fixed",
-    inset: 0,
-    display: activeDomain ? "flex" : "none",
-    alignItems: "center",
-    justifyContent: "center",
-    background: "linear-gradient(0deg, rgba(0,0,0,0.7), rgba(0,0,0,0.6))",
-    zIndex: 1000,
-    padding: "40px 20px",
-    overflowY: "auto",
-  };
-
-  const modalStyle = {
-    width: "100%",
-    maxWidth: 1100,
-    background: "linear-gradient(180deg, rgba(10,4,14,0.98) 0%, rgba(5,2,8,0.98) 100%)",
-    border: "2px solid #00e6ff",
-    borderRadius: 12,
-    padding: "28px",
-    boxShadow: "0 20px 60px rgba(0,0,0,0.8)",
-    color: "#9ffcff",
-    position: "relative",
-  };
-
-  const domainModalStyle = {
-    width: "100%",
-    maxWidth: 1100,
-    background: "linear-gradient(180deg, rgba(10,4,14,0.98) 0%, rgba(5,2,8,0.98) 100%)",
-    border: "2px solid #00e6ff",
-    borderRadius: 12,
-    padding: "28px",
-    boxShadow: "0 20px 60px rgba(0,0,0,0.8)",
-    color: "#9ffcff",
-    position: "relative",
-    maxHeight: "90vh",
-    overflowY: "auto"
-  };
-
-  const headerBarStyle = {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: 12,
-    marginBottom: 12,
-  };
-
-  const titleStyle = {
-    fontFamily: "'Courier New', Courier, monospace",
-    fontWeight: 700,
-    letterSpacing: 1.5,
-    fontSize: 22,
-    color: "#00e6ff",
-    margin: 0,
-  };
-
-  const closeBtnStyle = {
-    background: "#0b0b0b",
-    color: "#00e6ff",
-    border: "2px solid rgba(255,255,255,0.03)",
-    height: 30,
-    width: 30,
-    borderRadius: 6,
-    cursor: "pointer",
-    fontSize: 18,
-    lineHeight: "24px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  };
-
-  const bodyGridStyle = {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: 24,
-    marginTop: 16,
-    alignItems: "start",
-  };
-
-  const blockTitleStyle = {
-    color: "#e8fefe",
-    fontWeight: 700,
-    marginBottom: 8,
-    letterSpacing: 0.6,
-  };
-
-  const listStyle = {
-    margin: 0,
-    paddingLeft: 20,
-    color: "#bfeffb",
-    lineHeight: 1.9,
-  };
-
-  const problemCardStyle = {
-    background: "rgba(0, 230, 255, 0.05)",
-    border: "1px solid rgba(0, 230, 255, 0.2)",
-    borderRadius: 8,
-    padding: "20px",
-    marginBottom: "20px",
-  };
-
-  const problemTitleStyle = {
-    color: "#00e6ff",
-    fontWeight: 700,
-    fontSize: 18,
-    marginBottom: 12,
-    letterSpacing: 0.5,
-  };
-
-  const problemDescStyle = {
-    color: "#bfeffb",
-    lineHeight: 1.8,
-    fontSize: 15,
-  };
-
-  
+  const DRIVE_LINK = 'https://drive.google.com/drive/folders/1_8MIetG3u4Y-5st4FfFWtrbDbe6VEPFd?usp=sharing';
 
   return (
     <div className="vv-home">
-      <div className="scanline" aria-hidden />
+      <ParticleBackground />
 
-      <nav className="vv-nav">
-        <div className="logo">
-          <img src="/logo.jpg" alt="V-VORTEX" />
-          <h1>V-VORTEX</h1>
-        </div>
+      {/* Animated gradient orbs */}
+      <div className="gradient-orbs">
+        <div className="orb orb-1" style={{ transform: `translate(${mousePosition.x}px, ${mousePosition.y}px)` }} />
+        <div className="orb orb-2" style={{ transform: `translate(${-mousePosition.x}px, ${-mousePosition.y}px)` }} />
+        <div className="orb orb-3" style={{ transform: `translate(${mousePosition.x * 0.5}px, ${-mousePosition.y * 0.5}px)` }} />
+      </div>
 
-        <div className="nav-buttons">
-          <button className="nav-btn" onClick={() => goTo("/register")}>
-            <span>⚡REGISTER</span>
-          </button>
-          <button className="nav-btn" onClick={() => goTo("/login")}>
-            <span>🌀 LOGIN</span>
-          </button>
+      {/* Navigation */}
+      <nav className="vv-nav glass-nav">
+        <div className="nav-content">
+          <div className="logo" data-cursor="hover">
+            <img src="/logo.jpg" alt="V-Vortex Logo" className="logo-image" />
+            <h1 className="gradient-text">V-VORTEX</h1>
+          </div>
+
+          <div className="nav-links">
+            <a href="#domains" className="nav-link">Domains</a>
+            <a href="#rounds" className="nav-link">Rounds</a>
+            <a href="#prizes" className="nav-link">Prizes</a>
+            <a href="#team" className="nav-link">Team</a>
+          </div>
+
+          <div className="nav-buttons">
+            {/* Registration closed - event completed */}
+          </div>
         </div>
       </nav>
 
-      <header className="hero">
-        <div className="hero-content">
-          <h2>V-VORTEX</h2>
-          <p className="hero-subtitle">UNLEASH YOUR INNOVATION</p>
-          <p className="hero-desc">
-            The ultimate national-level hackathon from VIT Chennai where champions
-            are forged, ideas become reality, and innovation knows no bounds.
-            Join us for 24 hours of pure adrenaline, groundbreaking solutions,
-            and the chance to etch your name in the hall of legends.
+      {/* Hero Section */}
+      <header className="hero" ref={heroRef}>
+        <div className="hero-background">
+          <div className="hero-grid" />
+        </div>
+
+        <AnimatedSection className="hero-content" animation="reveal-up">
+          <div className="hero-badge">
+            <SparkleIcon size={16} />
+            <span>VIT Chennai Presents</span>
+          </div>
+
+          <h1 className="hero-title">
+            <span className="title-line">V-VORTEX</span>
+            <span className="title-line gradient-text">2026</span>
+          </h1>
+
+          <p className="hero-subtitle animate-text-glow">
+            INNOVATION UNLEASHED
           </p>
 
-          <div style={{marginTop:22}}>
-            <button className="cta" onClick={() => goTo('/register')}>Register Now</button>
+          <p className="hero-desc">
+            The ultimate national-level hackathon where champions were forged,
+            ideas became reality, and innovation knew no bounds.
+          </p>
+
+          <div className="hero-cta">
+            <a href={DRIVE_LINK} target="_blank" rel="noopener noreferrer" className="cta-primary">
+              <span>View Problem Statements</span>
+              <ArrowRightIcon size={20} />
+            </a>
           </div>
 
-          <div className="event-info">
-            <div className="info-card">
-              <h3>📍 VENUE</h3>
-              <p>VIT Chennai</p>
+          <div className="hero-stats">
+            <div className="stat-card glass-card">
+              <CalendarIcon size={24} />
+              <div className="stat-info">
+                <span className="stat-value">07-10 Jan 2026</span>
+                <span className="stat-label">Event Held</span>
+              </div>
             </div>
-            <div className="info-card">
-              <h3>📅 DATES</h3>
-              <p>07th - 08th Jan -- IdeaVortex</p>
-              <p>09th - 10th Jan -- HackVortex</p>
-              <p>10th Jan -- PitchVortex</p>
+            <div className="stat-card glass-card">
+              <MapPinIcon size={24} />
+              <div className="stat-info">
+                <span className="stat-value">VIT Chennai</span>
+                <span className="stat-label">Venue</span>
+              </div>
             </div>
-            <div className="info-card">
-              <h3>⚡LEVEL</h3>
-              <p>National</p>
+            <div className="stat-card glass-card">
+              <TrophyIcon size={24} />
+              <div className="stat-info">
+                <span className="stat-value">₹30,000+</span>
+                <span className="stat-label">Prize Pool</span>
+              </div>
             </div>
           </div>
+        </AnimatedSection>
+
+        <div className="scroll-indicator">
+          <div className="scroll-line" />
+          <span>Scroll to explore</span>
         </div>
       </header>
 
-      <section className="domains">
-        <h2 className="section-title">⟨ BATTLE DOMAINS ⟩</h2>
-        <div className="domains-grid">
-          <div className="domain-card" onClick={() => window.open(DRIVE_LINK, '_blank')} style={{cursor: 'pointer'}}>
-            <div className="domain-icon">🤖</div>
-            <h3>AI/ML</h3>
-          </div>
-          <div className="domain-card" onClick={() => window.open(DRIVE_LINK, '_blank')} style={{cursor: 'pointer'}}>
-            <div className="domain-icon">🛡️</div>
-            <h3>Cybersecurity</h3>
-          </div>
-          <div className="domain-card selected" onClick={() => window.open(DRIVE_LINK, '_blank')} style={{cursor: 'pointer'}}>
-            <div className="domain-icon">🏥</div>
-            <h3>Healthcare</h3>
-          </div>
-          <div className="domain-card" onClick={() => window.open(DRIVE_LINK, '_blank')} style={{cursor: 'pointer'}}>
-            <div className="domain-icon">💰</div>
-            <h3>Fintech</h3>
-          </div>
-          <div className="domain-card" onClick={() => window.open(DRIVE_LINK, '_blank')} style={{cursor: 'pointer'}}>
-            <div className="domain-icon">🔌</div>
-            <h3>IoT & Robotics</h3>
-          </div>
-        </div>
-      </section>
+      {/* Domains Section */}
+      <section id="domains" className="section domains-section">
+        <AnimatedSection className="section-header" animation="reveal-up">
+          <span className="section-tag">CHALLENGE AREAS</span>
+          <h2 className="section-title">Battle Domains</h2>
+          <p className="section-desc">Choose your arena and demonstrate your expertise</p>
+        </AnimatedSection>
 
-      <section className="evaluation">
-        <h2 className="section-title">⟨ PATH TO VICTORY ⟩</h2>
-        <div className="rounds">
-          {Object.keys(rounds).map((k, idx) => (
-            <div
-              className="round-card"
-              key={k}
-              onClick={() => openModal(k)}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") openModal(k);
-              }}
+        <div className="domains-grid">
+          {domains.map((domain, idx) => (
+            <AnimatedSection
+              key={domain.name}
+              className="domain-card tilt-3d"
+              animation="scale-in"
+              delay={idx * 100}
+              onClick={() => window.open(DRIVE_LINK, '_blank')}
             >
-              <span className="round-number">0{idx + 1}</span>
-              <h3>{`ROUND ${idx + 1}`}</h3>
-              <p>{rounds[k].desc}</p>
-              <a
-                href="#"
-                className="access"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  openModal(k);
-                }}
-                aria-label={`Open ${rounds[k].title} details`}
-              >
-                ACCESS DATA →
-              </a>
-            </div>
+              <div className="domain-glow" style={{ background: domain.color }} />
+              <div className="domain-icon" style={{ color: domain.color }}>
+                <domain.icon size={48} />
+              </div>
+              <h3 className="domain-name">{domain.name}</h3>
+              <p className="domain-desc">{domain.desc}</p>
+              <div className="domain-arrow">
+                <ArrowRightIcon size={20} />
+              </div>
+            </AnimatedSection>
           ))}
         </div>
       </section>
 
-      <section className="team">
-        <h2 className="section-title">⟨ THE ARCHITECTS ⟩</h2>
+      {/* Rounds Section */}
+      <section id="rounds" className="section rounds-section">
+        <AnimatedSection className="section-header" animation="reveal-up">
+          <span className="section-tag">THE JOURNEY</span>
+          <h2 className="section-title">The Path Taken</h2>
+          <p className="section-desc">Three intense rounds of innovation</p>
+        </AnimatedSection>
 
-        <div className="coordinator-section">
-          <h3 className="coord-title">▸ FACULTY COORDINATOR</h3>
-          <div className="coordinator-cards">
-            <div className="coordinator-card">
-              <div className="member-photo">DP</div>
-              <h4 className="member-name">Dr. Pavithra Sekar</h4>
-              <p className="member-role">Faculty Coordinator</p>
-            </div>
-            <div className="coordinator-card">
-              <div className="member-photo">RP</div>
-              <h4 className="member-name">Dr. Rama Parvathy</h4>
-              <p className="member-role">Faculty Coordinator</p>
-            </div>
-          </div>
-        </div>
+        <div className="timeline">
+          {rounds.map((round, idx) => (
+            <AnimatedSection
+              key={round.number}
+              className="timeline-item"
+              animation={idx % 2 === 0 ? "slide-left" : "slide-right"}
+              delay={idx * 150}
+            >
+              <div className="timeline-connector">
+                <div className="timeline-dot">
+                  <span>{round.number}</span>
+                </div>
+                <div className="timeline-line" />
+              </div>
 
-        <div className="coordinator-section">
-          <h3 className="coord-title" style={{paddingTop: "60px"}}>▸ STUDENT COORDINATORS</h3>
-          <div className="coordinator-cards">
-            <div className="coordinator-card">
-              <div className="member-photo">SJ</div>
-              <h4 className="member-name">Sugeeth Jayaraj S.A.</h4>
-              <p className="member-role">Student Coordinator</p>
-              <p className="member-role">Feel free to reach out</p>
-              <p className="member-role">+91 81226 54796</p>
-            </div>
-            <div className="coordinator-card">
-              <div className="member-photo">PM</div>
-              <h4 className="member-name">Prasanna M</h4>
-              <p className="member-role">Student Coordinator</p>
-              <p className="member-role">Need Help?</p>
-              <p className="member-role">+91 97909 70726</p>
-            </div>
-          </div>
-        </div>
+              <div className="round-card glass-card">
+                <div className="round-header">
+                  <div className="round-badges">
+                    <span className="round-date">{round.date}</span>
+                    <span className="round-mode">{round.mode}</span>
+                  </div>
+                  <h3 className="round-title">{round.title}</h3>
+                  <span className="round-subtitle">{round.subtitle}</span>
+                </div>
 
-        <h3 className="section-title alt" style={{paddingTop: "60px"}}>⟨ TEAM LEADS ⟩</h3>
-        <div className="team-grid">
-          <div className="team-member"><div className="member-photo">MS</div><h4 className="member-name">M. Shree</h4><p className="member-role">Guests, Sponsorship & Awards Committee</p></div>
-          <div className="team-member"><div className="member-photo">YG</div><h4 className="member-name">Yashwant Gokul</h4><p className="member-role">Technical Support Committee</p></div>
-          <div className="team-member"><div className="member-photo">KD</div><h4 className="member-name">L. Kevin Daniel</h4><p className="member-role">Web Development Committee</p></div>
-          <div className="team-member"><div className="member-photo">SJ</div><h4 className="member-name">Sanjay</h4><p className="member-role">Security Committee</p></div>
-          <div className="team-member"><div className="member-photo">JK</div><h4 className="member-name">Jaidev Karthikeyan</h4><p className="member-role">Reg & Marketing Committee</p></div>
-          <div className="team-member"><div className="member-photo">SV</div><h4 className="member-name">Suprajha V M</h4><p className="member-role">Design & Social Media Committee</p></div>
-          <div className="team-member"><div className="member-photo">SN</div><h4 className="member-name">Sanjana</h4><p className="member-role">Design & Social Media Committee</p></div>
-        </div>
+                <p className="round-desc">{round.desc}</p>
 
-        <h3 className="section-title special" style={{paddingTop: "60px"}}>⟨ DEV TEAM ⟩</h3>
-        <div className="team-grid special-grid">
-          <div className="team-member">
-            <div className="member-photo">IM</div>
-            <h4 className="member-name">Ibhan Mukherjee</h4>
-            <p className="member-role">Frontend Developer</p>
-          </div>
-          <div className="team-member">
-            <div className="member-photo">DP</div>
-            <h4 className="member-name">Devangshu Pandey</h4>
-            <p className="member-role">Frontend Developer</p>
-          </div>
-          <div className="team-member">
-            <div className="member-photo">SG</div>
-            <h4 className="member-name">Srijan Guchhait</h4>
-            <p className="member-role">System Architect</p>
-          </div>
+                <ul className="round-highlights">
+                  {round.highlights.map((h, i) => (
+                    <li key={i}>
+                      <SparkleIcon size={14} />
+                      <span>{h}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </AnimatedSection>
+          ))}
         </div>
       </section>
 
-      <footer>
-        <div className="footer-sponsors">
-          <h3 className="sponsor-heading">Supported By</h3>
-          <div className="sponsor-logos">
-            <a href="https://vit.ac.in" target="_blank" rel="noopener noreferrer">
-              <img src="/sponsors/vit-logo.png" alt="VIT Chennai" />
-            </a>
-            <a href="https://180degreesconsulting.com" target="_blank" rel="noopener noreferrer">
-              <img src="/sponsors/180degrees.png" alt="180 Degrees Consulting" />
-            </a>
-            <a href = "https://www.canarabank.com" target="_blank" rel="noopener noreferrer">
-              <img src="/sponsors/Canara-Bank.jpg" alt="Canara Bank" />
-            </a>
-            <a href="https://unstop.com/" target="_blank" rel="noopener noreferrer">
-              <img src="/sponsors/unstop.png" alt="Unstop" />
-            </a>
-            <a href="https://www.shnorh.com/" target="_blank" rel="noopener noreferrer">
-              <img src="/sponsors/shnorh.jpg" alt="Shnorh" />
-            </a>
-            <a href = "https://www.bhaveshassociates.com/" target = "_blank" rel = "noopener noreferrer">
-            < img src="/sponsors/BaveshA.png" alt="Bavesh" />
-            </a>
-            <a href = "https://nvskzen.in/index.html" target="_blank" rel="noopener noreferrer">
-              <img src="/sponsors/image.png" alt="NVSK Zen" />
-            </a>
-          </div>
+      {/* Prizes Section */}
+      <section id="prizes" className="section prizes-section">
+        <AnimatedSection className="section-header" animation="reveal-up">
+          <span className="section-tag">REWARDS</span>
+          <h2 className="section-title">Winners Awarded</h2>
+          <p className="section-desc">Winners received amazing prizes and recognition</p>
+        </AnimatedSection>
+
+        <div className="prizes-grid">
+          {prizes.map((prize, idx) => (
+            <AnimatedSection
+              key={prize.place}
+              className={`prize-card ${idx === 0 ? 'prize-winner' : ''}`}
+              animation="scale-in"
+              delay={idx * 100}
+            >
+              <div className="prize-place">{prize.place}</div>
+              <div className="prize-amount gradient-text">{prize.amount}</div>
+              <div className="prize-label">{prize.label}</div>
+            </AnimatedSection>
+          ))}
         </div>
 
-        <p>🌀 V-VORTEX 2026 • WHERE LEGENDS ARE BORN 🌀</p>
-        <p className="muted">VIT Chennai • National Level Hackathon</p>
-      </footer>
+        <AnimatedSection className="bonus-prizes" animation="fade-in" delay={400}>
+          <div className="bonus-item">
+            <TrophyIcon size={24} />
+            <span>Certificates for all Finalists</span>
+          </div>
+          <div className="bonus-item">
+            <SparkleIcon size={24} />
+            <span>Internship Opportunities</span>
+          </div>
+          <div className="bonus-item">
+            <LightningIcon size={24} />
+            <span>Mentorship Sessions</span>
+          </div>
+        </AnimatedSection>
+      </section>
 
-      {/* Rounds Modal */}
-      <div
-        className={`modal-overlay ${activeRound ? "active" : ""}`}
-        onClick={closeModal}
-        role="dialog"
-        aria-modal={activeRound ? "true" : "false"}
-        aria-hidden={!activeRound}
-        style={overlayStyle}
-      >
-        {activeRound && (
-          <div
-            className="modal"
-            onClick={(e) => e.stopPropagation()}
-            style={modalStyle}
-          >
-            <div style={headerBarStyle}>
-              <h2 style={titleStyle}>{activeRound.title}</h2>
-              <button
-                onClick={closeModal}
-                aria-label="Close details"
-                style={closeBtnStyle}
-              >
-                ×
-              </button>
+      {/* Team Section */}
+      <section id="team" className="section team-section">
+        <AnimatedSection className="section-header" animation="reveal-up">
+          <span className="section-tag">THE ARCHITECTS</span>
+          <h2 className="section-title">Our Team</h2>
+        </AnimatedSection>
+
+        {/* Faculty Coordinators */}
+        <AnimatedSection className="team-group" animation="fade-in">
+          <h3 className="group-title">Faculty Coordinators</h3>
+          <div className="team-grid coordinators">
+            <div className="team-card glass-card">
+              <div className="member-avatar">DP</div>
+              <h4>Dr. Pavithra Sekar</h4>
+              <span>Faculty Coordinator</span>
             </div>
-
-            <div style={{ fontStyle: "italic", color: "#bfeffb", marginBottom: 8 }}>
-              "{activeRound.desc}"
+            <div className="team-card glass-card">
+              <div className="member-avatar">RP</div>
+              <h4>Dr. Rama Parvathy</h4>
+              <span>Faculty Coordinator</span>
             </div>
+          </div>
+        </AnimatedSection>
 
-            <div style={{ height: 1, background: "rgba(255,255,255,0.03)", margin: "12px 0" }} />
+        {/* Student Coordinators */}
+        <AnimatedSection className="team-group" animation="fade-in" delay={100}>
+          <h3 className="group-title">Student Coordinators</h3>
+          <div className="team-grid coordinators">
+            <div className="team-card glass-card">
+              <div className="member-avatar gradient-avatar">SJ</div>
+              <h4>Sugeeth Jayaraj S.A.</h4>
+              <span>Student Coordinator</span>
+              <a href="tel:+918122654796" className="contact-link">+91 81226 54796</a>
+            </div>
+            <div className="team-card glass-card">
+              <div className="member-avatar gradient-avatar">PM</div>
+              <h4>Prasanna M</h4>
+              <span>Student Coordinator</span>
+              <a href="tel:+919790970726" className="contact-link">+91 97909 70726</a>
+            </div>
+          </div>
+        </AnimatedSection>
 
-            <div style={bodyGridStyle}>
-              {Object.entries(activeRound.blocks).map(([heading, items]) => (
-                <div key={heading}>
-                  <h4 style={blockTitleStyle}>{heading.toUpperCase()}</h4>
-                  <ul style={listStyle}>
-                    {items.map((it, i) => (
-                      <li key={i} style={{ listStyleType: "none", marginBottom: 8 }}>
-                        <span
-                          style={{
-                            display: "inline-block",
-                            width: 10,
-                            height: 10,
-                            background: "#ff2fe6",
-                            borderRadius: 2,
-                            marginRight: 10,
-                            transform: "translateY(-1px)",
-                          }}
-                          aria-hidden
-                        />
-                        {it}
-                      </li>
-                    ))}
-                  </ul>
+        {/* Team Leads */}
+        <AnimatedSection className="team-group" animation="fade-in" delay={200}>
+          <h3 className="group-title">Team Leads</h3>
+          <div className="team-grid leads">
+            {[
+              { initials: "MS", name: "M. Shree", role: "Sponsorship & Awards" },
+              { initials: "YG", name: "Yashwant Gokul", role: "Technical Support" },
+              { initials: "KD", name: "L. Kevin Daniel", role: "Web Development" },
+              { initials: "SJ", name: "Sanjay", role: "Security" },
+              { initials: "JK", name: "Jaidev Karthikeyan", role: "Registration & Marketing" },
+              { initials: "SV", name: "Suprajha V M", role: "Design & Social Media" },
+              { initials: "SN", name: "Sanjana", role: "Design & Social Media" }
+            ].map((member, idx) => (
+              <div key={idx} className="team-card-mini glass-card">
+                <div className="member-avatar-mini">{member.initials}</div>
+                <div className="member-info">
+                  <h4>{member.name}</h4>
+                  <span>{member.role}</span>
                 </div>
-              ))}
+              </div>
+            ))}
+          </div>
+        </AnimatedSection>
+
+        {/* Dev Team */}
+        <AnimatedSection className="team-group dev-team" animation="fade-in" delay={300}>
+          <h3 className="group-title gradient-text">Dev Team</h3>
+          <div className="team-grid dev">
+            {[
+              { initials: "IM", name: "Ibhan Mukherjee", role: "Frontend Developer" },
+              { initials: "DP", name: "Devangshu Pandey", role: "Frontend Developer" },
+              { initials: "SG", name: "Srijan Guchhait", role: "System Architect" }
+            ].map((member, idx) => (
+              <div key={idx} className="team-card glass-card dev-card">
+                <div className="member-avatar gradient-avatar">{member.initials}</div>
+                <h4>{member.name}</h4>
+                <span>{member.role}</span>
+              </div>
+            ))}
+          </div>
+        </AnimatedSection>
+      </section>
+
+      {/* Footer */}
+      <footer className="vv-footer">
+        <div className="footer-wave">
+          <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 120L60 110C120 100 240 80 360 75C480 70 600 80 720 85C840 90 960 90 1080 85C1200 80 1320 70 1380 65L1440 60V120H0Z" fill="url(#footerGrad)" />
+            <defs>
+              <linearGradient id="footerGrad" x1="0" y1="0" x2="1440" y2="0">
+                <stop offset="0%" stopColor="#8B5CF6" stopOpacity="0.3" />
+                <stop offset="50%" stopColor="#06B6D4" stopOpacity="0.3" />
+                <stop offset="100%" stopColor="#EC4899" stopOpacity="0.3" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+
+        <div className="footer-content">
+          <div className="footer-sponsors">
+            <h3>Supported By</h3>
+            <div className="sponsor-logos">
+              <a href="https://vit.ac.in" target="_blank" rel="noopener noreferrer">
+                <img src="/sponsors/vit-logo.png" alt="VIT Chennai" />
+              </a>
+              <a href="https://180degreesconsulting.com" target="_blank" rel="noopener noreferrer">
+                <img src="/sponsors/180degrees.png" alt="180 Degrees Consulting" />
+              </a>
+              <a href="https://www.canarabank.com" target="_blank" rel="noopener noreferrer">
+                <img src="/sponsors/Canara-Bank.jpg" alt="Canara Bank" />
+              </a>
+              <a href="https://unstop.com/" target="_blank" rel="noopener noreferrer">
+                <img src="/sponsors/unstop.png" alt="Unstop" />
+              </a>
+              <a href="https://www.shnorh.com/" target="_blank" rel="noopener noreferrer">
+                <img src="/sponsors/shnorh.jpg" alt="Shnorh" />
+              </a>
+              <a href="https://www.bhaveshassociates.com/" target="_blank" rel="noopener noreferrer">
+                <img src="/sponsors/BaveshA.png" alt="Bavesh Associates" />
+              </a>
+              <a href="https://nvskzen.in/index.html" target="_blank" rel="noopener noreferrer">
+                <img src="/sponsors/image.png" alt="NVSK Zen" />
+              </a>
             </div>
           </div>
-        )}
-      </div>
 
-      {/* Domain Modal */}
-      <div
-        className={`modal-overlay ${activeDomain ? "active" : ""}`}
-        onClick={closeDomainModal}
-        role="dialog"
-        aria-modal={activeDomain ? "true" : "false"}
-        aria-hidden={!activeDomain}
-        style={domainOverlayStyle}
-      >
-        {activeDomain && (
-          <div
-            className="modal"
-            onClick={(e) => e.stopPropagation()}
-            style={domainModalStyle}
-          >
-            <div style={headerBarStyle}>
-              <h2 style={titleStyle}>
-                {activeDomain.icon} {activeDomain.title} - PROBLEM STATEMENTS
-              </h2>
-              <button
-                onClick={closeDomainModal}
-                aria-label="Close details"
-                style={closeBtnStyle}
-              >
-                ×
-              </button>
+          <div className="footer-bottom">
+            <div className="footer-brand">
+              <VortexIcon size={32} />
+              <span className="gradient-text">V-VORTEX 2026</span>
             </div>
-
-            <div style={{ height: 1, background: "rgba(255,255,255,0.03)", margin: "12px 0 24px 0" }} />
-
-            <div style={{ ...problemCardStyle, position: 'relative', color: '#bfeffb' }}>
-              <h3 style={{ ...problemTitleStyle, filter: 'none', WebkitFilter: 'none' }}>
-                Problem statements are in the below mentioned drive link.
-              </h3>
-              <p style={{ ...problemDescStyle, filter: 'none', WebkitFilter: 'none' }}>
-                https://drive.google.com/drive/folders/1_8MIetG3u4Y-5st4FfFWtrbDbe6VEPFd?usp=sharing
-              </p>
-            </div>
+            <p className="footer-tagline">Where Legends Are Born</p>
+            <p className="footer-copy">VIT Chennai • National Level Hackathon</p>
           </div>
-        )}
-      </div>
+        </div>
+      </footer>
     </div>
   );
 }
-
-
-
-
-

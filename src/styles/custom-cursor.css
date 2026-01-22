@@ -1,0 +1,224 @@
+/* ═══════════════════════════════════════════════════════════
+   V-VORTEX CUSTOM CURSOR STYLES
+   Interactive cursor with glow and trail effects
+   ═══════════════════════════════════════════════════════════ */
+
+/* Hide default cursor globally */
+* {
+    cursor: none !important;
+}
+
+/* Main cursor dot */
+.vortex-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 12px;
+    height: 12px;
+    background: var(--vortex-cyan);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: var(--z-cursor);
+    mix-blend-mode: difference;
+    transition: transform 0.15s ease-out,
+        width 0.2s ease,
+        height 0.2s ease,
+        background 0.3s ease;
+    transform: translate(-50%, -50%);
+}
+
+/* Cursor outer ring */
+.vortex-cursor-ring {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 40px;
+    height: 40px;
+    border: 2px solid var(--vortex-violet);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: calc(var(--z-cursor) - 1);
+    transition: transform 0.25s ease-out,
+        width 0.3s ease,
+        height 0.3s ease,
+        border-color 0.3s ease,
+        opacity 0.3s ease;
+    transform: translate(-50%, -50%);
+    opacity: 0.6;
+}
+
+/* Cursor glow effect */
+.vortex-cursor::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 30px;
+    height: 30px;
+    background: radial-gradient(circle, var(--vortex-cyan-glow) 0%, transparent 70%);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0.8;
+    pointer-events: none;
+}
+
+/* ─────────────── HOVER STATES ─────────────── */
+
+/* Link/Button hover - expand cursor */
+.vortex-cursor.cursor-hover {
+    width: 60px;
+    height: 60px;
+    background: transparent;
+    border: 2px solid var(--vortex-pink);
+    mix-blend-mode: normal;
+}
+
+.vortex-cursor.cursor-hover::before {
+    width: 80px;
+    height: 80px;
+    background: radial-gradient(circle, var(--vortex-pink-glow) 0%, transparent 70%);
+}
+
+.vortex-cursor-ring.cursor-hover {
+    width: 80px;
+    height: 80px;
+    border-color: var(--vortex-pink);
+    opacity: 0.4;
+}
+
+/* Text input hover */
+.vortex-cursor.cursor-text {
+    width: 3px;
+    height: 24px;
+    border-radius: 2px;
+    background: var(--vortex-cyan);
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+
+    0%,
+    50% {
+        opacity: 1;
+    }
+
+    51%,
+    100% {
+        opacity: 0;
+    }
+}
+
+.vortex-cursor-ring.cursor-text {
+    opacity: 0;
+}
+
+/* Clicking state */
+.vortex-cursor.cursor-click {
+    transform: translate(-50%, -50%) scale(0.8);
+    background: var(--vortex-pink);
+}
+
+.vortex-cursor-ring.cursor-click {
+    transform: translate(-50%, -50%) scale(0.6);
+    border-color: var(--vortex-pink);
+}
+
+/* ─────────────── CURSOR TRAIL ─────────────── */
+.cursor-trail {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    background: var(--vortex-violet);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: calc(var(--z-cursor) - 2);
+    opacity: 0.5;
+    transform: translate(-50%, -50%);
+    transition: opacity 0.3s ease;
+}
+
+.cursor-trail:nth-child(2) {
+    width: 6px;
+    height: 6px;
+    opacity: 0.4;
+    transition-delay: 0.02s;
+}
+
+.cursor-trail:nth-child(3) {
+    width: 5px;
+    height: 5px;
+    opacity: 0.3;
+    transition-delay: 0.04s;
+}
+
+.cursor-trail:nth-child(4) {
+    width: 4px;
+    height: 4px;
+    opacity: 0.2;
+    transition-delay: 0.06s;
+}
+
+.cursor-trail:nth-child(5) {
+    width: 3px;
+    height: 3px;
+    opacity: 0.1;
+    transition-delay: 0.08s;
+}
+
+/* ─────────────── MAGNETIC EFFECT AREA ─────────────── */
+[data-cursor="magnetic"] {
+    position: relative;
+}
+
+/* ─────────────── HIDDEN STATE ─────────────── */
+.vortex-cursor.cursor-hidden,
+.vortex-cursor-ring.cursor-hidden {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0);
+}
+
+/* ─────────────── LOADING STATE ─────────────── */
+.vortex-cursor.cursor-loading {
+    animation: cursor-spin 1s linear infinite;
+}
+
+@keyframes cursor-spin {
+    0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+/* ─────────────── MOBILE FALLBACK ─────────────── */
+@media (hover: none) and (pointer: coarse) {
+
+    .vortex-cursor,
+    .vortex-cursor-ring,
+    .cursor-trail {
+        display: none !important;
+    }
+
+    * {
+        cursor: auto !important;
+    }
+}
+
+/* ─────────────── REDUCED MOTION ─────────────── */
+@media (prefers-reduced-motion: reduce) {
+
+    .vortex-cursor,
+    .vortex-cursor-ring {
+        transition: none;
+    }
+
+    .cursor-trail {
+        display: none;
+    }
+
+    .vortex-cursor::before {
+        animation: none;
+    }
+}

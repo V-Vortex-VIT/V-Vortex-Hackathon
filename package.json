@@ -1,33 +1,32 @@
 {
   "name": "vortex-app",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
-  "description": "This Repository consists of a web app which handles attendee registration, team formation, project submission, real-time scorekeeping, and administrative tools",
+  "description": "V-Vortex - National Level Hackathon at VIT Chennai. A stunning showcase website for the ultimate innovation challenge.",
   "main": "index.js",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "preview": "vite preview"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/V-Vortex-VIT/V-Vortex-Hackathon.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "hackathon",
+    "vit-chennai",
+    "v-vortex"
+  ],
+  "author": "V-Vortex Team",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/V-Vortex-VIT/V-Vortex-Hackathon/issues"
   },
   "homepage": "https://github.com/V-Vortex-VIT/V-Vortex-Hackathon#readme",
   "dependencies": {
-    "@supabase/supabase-js": "^2.87.1",
-    "exceljs": "^4.3.0",
-    "dotenv": "^17.2.3",
-    "node-fetch": "^2.7.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-router-dom": "^7.10.1"
